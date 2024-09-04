@@ -1,0 +1,16 @@
+
+SERIALIZER() -> vazifasi
+
+json -> obj
+obj -> json
+
+
+ Category(id , name)
+ Product(id , name , price , created_at , category)
+
+
+ API:
+    category/list      -> id , name
+    category/create    -> port(name)
+    product/list       -> name , price , created_at , category
+    product/create     -> POST(name , price , category)
