@@ -8,9 +8,9 @@ from apps.models import Category, Product
 
 @admin.register(Category)
 class CategoryModelAdmin(ModelAdmin):
-    pass
+    exclude = 'slug',
 
 
 @admin.register(Product)
 class ProductModelAdmin(ModelAdmin):
-    pass
+    exclude = 'slug',
