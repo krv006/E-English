@@ -1,25 +1,39 @@
 from rest_framework.serializers import ModelSerializer
 
-from apps.models import Category, Product
-from rest_framework.fields import IntegerField
+from apps.models import Order, Address, CategoryOfEggs, Employees, Customers, CustomerStatistics
 
 
-class CategoryModelSerializer(ModelSerializer):
+class OrderModelSerializer(ModelSerializer):
     class Meta:
-        model = Category
+        model = Order
         fields = '__all__'
 
 
-class ProductModelSerializer(ModelSerializer):
-    price = IntegerField(default=0)
-
+class AddressModelSerializer(ModelSerializer):
     class Meta:
-        model = Product
+        model = Address
         fields = '__all__'
-        # exclude = 'id',
 
-    def to_representation(self, instance: Product):
-        repr = super().to_representation(instance)
-        repr['category'] = CategoryModelSerializer(instance.category).data
-        # repr['key'] = 'value' #todo buyodan xolagan narsamizani qoshib qoyse boladi
-        return repr
+
+class CategoryOfEggsModelSerializer(ModelSerializer):
+    class Meta:
+        model = CategoryOfEggs
+        fields = '__all__'
+
+
+class EmployeesModelSerializer(ModelSerializer):
+    class Meta:
+        model = Employees
+        fields = '__all__'
+
+
+class CustomersModelSerializer(ModelSerializer):
+    class Meta:
+        model = Customers
+        fields = '__all__'
+
+
+class CustomerStatisticsModelSerializer(ModelSerializer):
+    class Meta:
+        model = CustomerStatistics
+        fields = '__all__'

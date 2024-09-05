@@ -1,38 +1,72 @@
 from django.contrib.auth.models import AbstractUser
-from django.db import models
-from django.db.models import Model, CASCADE, TextField, ForeignKey, SlugField, CharField, DateTimeField
+from django.db.models import Model, CASCADE, ForeignKey, CharField, DateTimeField, \
+    BigIntegerField, IntegerField
 from django.db.models import Model, FloatField
-from django.utils.text import slugify
 
 
-class BaseSlugModel(Model):
+class CategoryOfEggs(Model):
     name = CharField(max_length=255)
-    slug = SlugField(unique=True, blank=True)
-    created_at = DateTimeField(auto_now_add=True)
-
-    class Meta:
-        abstract = True
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-            original_slug = self.slug
-            counter = 1
-            while self.__class__.objects.filter(slug=self.slug).exists():
-                self.slug = f"{original_slug}-{counter}"
-                counter += 1
-        super().save(*args, **kwargs)
+    price = BigIntegerField(default=0)
 
     def __str__(self):
         return self.name
 
 
-class Category(BaseSlugModel):
-    pass
+class Order(Model):
+    customer = ForeignKey('apps.Customers', on_delete=CASCADE, related_name='orders')
+    egg_count = IntegerField(default=0)
+    egg = ForeignKey('apps.CategoryOfEggs', on_delete=CASCADE, related_name='orders')
+    total = FloatField(default=0)
+    order_date = DateTimeField(auto_now_add=True)
+    status = CharField(max_length=255)
+
+    def __str__(self):
+        return f"Order {self.id} - {self.status}"
 
 
-class Product(BaseSlugModel):
-    price = FloatField(default=0)
-    discount = FloatField(default=0)
-    description = TextField(null=True, blank=True)
-    category = ForeignKey('apps.Category', CASCADE, related_name='product_category')
+class CustomerStatistics(Model):
+    customer = ForeignKey('apps.Customers', on_delete=CASCADE, related_name='statistics')
+    residual = FloatField(default=0)
+    order = ForeignKey('apps.Order', on_delete=CASCADE, related_name='statistics')
+    telegram_link = CharField(max_length=255)
+
+    def __str__(self):
+        return f"Stats for Customer {self.customer_id}"
+
+
+class Customers(Model):
+    first_name = CharField(max_length=255)
+    last_name = CharField(max_length=255)
+    phone_number = CharField(max_length=255)
+    address = ForeignKey('apps.Address', on_delete=CASCADE, related_name='residents')
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+
+class Payment(Model):
+    customer = ForeignKey('apps.Customers', on_delete=CASCADE, related_name='payments')
+    dealer_id = BigIntegerField(default=0)
+    amount = IntegerField(default=0)
+    payment_date = DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Payment {self.id} by {self.customer}"
+
+
+class Address(Model):
+    region = CharField(max_length=255)
+    district = CharField(max_length=255)
+    target = CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.region}, {self.district}, {self.target}"
+
+
+class Employees(Model):
+    first_name = CharField(max_length=255)
+    last_name = CharField(max_length=255)
+    role_name = CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} - {self.role_name}"
