@@ -5,6 +5,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from drf_spectacular.utils import extend_schema
 
 from apps.models import Order, Address, CategoryOfEggs, Employees, Customers, CustomerStatistics
+
 from apps.serializer import OrderModelSerializer, AddressModelSerializer, CategoryOfEggsModelSerializer, \
     EmployeesModelSerializer, CustomersModelSerializer, CustomerStatisticsModelSerializer
 
@@ -19,6 +20,7 @@ class OrderListCreateAPIView(ListCreateAPIView):
 class OrderRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderModelSerializer
+
 
 @extend_schema(tags=['address'])
 class AddressListCreateAPIView(ListCreateAPIView):
@@ -44,7 +46,10 @@ class CustomersListCreateAPIView(ListCreateAPIView):
     serializer_class = CustomersModelSerializer
 
 
-@extend_schema(tags=['customers'])
+@extend_schema(tags=['customers-statistic'])
 class CustomerStatisticsListCreateAPIView(ListCreateAPIView):
     queryset = CustomerStatistics.objects.all()
     serializer_class = CustomerStatisticsModelSerializer
+
+# todo ModelViewSet mana shunda xammasi bor va shunda xammasi ishlidi`
+# todo login email orqali login qilish
