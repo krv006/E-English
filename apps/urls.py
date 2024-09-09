@@ -1,26 +1,20 @@
-from django.urls import path
-
-from apps.views import AddressListCreateAPIView, CategoryOfEggsListCreateAPIView, CustomersListCreateAPIView, \
-    CustomerStatisticsListCreateAPIView, EmployeesListCreateAPIView, OrderListCreateAPIView, \
-    OrderRetrieveUpdateDestroyAPIView, AddressRetrieveUpdateDestroyAPIView, EmployeesRetrieveUpdateDestroyAPIView, \
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import UserListCreateAPIView, BooksViewSet, UnitsViewSet, AdminSiteSettingsListCreateAPIView, TestViewSet, \
     SendEmailAPIView, VerifyEmailAPIView
 
+router = DefaultRouter()
+
+router.register(r'books', BooksViewSet)
+router.register(r'units', UnitsViewSet)
+
+router.register(r'tests', TestViewSet)
+
 urlpatterns = [
-
-    path('address/', AddressListCreateAPIView.as_view(), name='address'),
-    path('address/<int:pk>', AddressRetrieveUpdateDestroyAPIView.as_view(), name='addre'),
-
-    path('category-egg/', CategoryOfEggsListCreateAPIView.as_view()),
-
-    path('customer/', CustomersListCreateAPIView.as_view()),
-    path('customer-statistic/', CustomerStatisticsListCreateAPIView.as_view()),
-
-    path('employees/', EmployeesListCreateAPIView.as_view()),
-    path('employees/<int:pk>', EmployeesRetrieveUpdateDestroyAPIView.as_view()),
-
-    path('order/', OrderListCreateAPIView.as_view()),
-    path('order-detail/<int:pk>', OrderRetrieveUpdateDestroyAPIView.as_view()),
-
+    path('', include(router.urls)),
+    path('user/', UserListCreateAPIView.as_view(), name='user'),
+    path('admin/', AdminSiteSettingsListCreateAPIView.as_view(), name='admin'),
     path('auth/send-email', SendEmailAPIView.as_view(), name='send_email'),
     path('auth/verify-code', VerifyEmailAPIView.as_view(), name='verify-email'),
+
 ]
