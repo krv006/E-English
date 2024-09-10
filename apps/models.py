@@ -17,7 +17,7 @@ class User(AbstractUser):
 class Books(Model):
     name = CharField(max_length=255)
     image = ImageField(upload_to='book_image/', blank=True, null=True)
-    size = PositiveIntegerField(default=0, blank=True, null=True)
+    # size = PositiveIntegerField(default=0, blank=True, null=True)
     created_at = DateTimeField(auto_now_add=True)
     slug = SlugField(max_length=255, unique=True, blank=True)
 
