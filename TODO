@@ -14,3 +14,7 @@ obj -> json
     category/create    -> port(name)
     product/list       -> name , price , created_at , category
     product/create     -> POST(name , price , category)
+
+
+docker run --name some-redis -p 6379:6379 -d redis redis-server --save 60 1 --loglevel warning
+# TODO DOCKER YARATISH

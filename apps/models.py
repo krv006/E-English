@@ -37,7 +37,7 @@ class Books(Model):
 
 class Units(Model):
     name = CharField(max_length=255)
-    book = ForeignKey('Books', on_delete=CASCADE, related_name='units')
+    book = ForeignKey('apps.Books', on_delete=CASCADE, related_name='units')
     file = FileField(upload_to='units_files/', validators=[
         FileExtensionValidator(allowed_extensions=['pdf', 'docx', 'txt'])
     ])

@@ -23,6 +23,11 @@ class UnitsModelSerializer(ModelSerializer):
         model = Units
         fields = '__all__'
 
+    def to_representation(self, instance: Units):
+        repr = super().to_representation(instance)
+        repr['book'] = BooksModelSerializer(instance.book, context=self.context).data
+        return repr
+
 
 class AdminSiteSettingsModelSerializer(ModelSerializer):
     class Meta:
