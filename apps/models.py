@@ -52,7 +52,7 @@ class Test(Model):
     audio_file = FileField(upload_to='test_audio/', validators=[
         FileExtensionValidator(allowed_extensions=['mp3', 'wav'])
     ])
-    unit = ForeignKey('Units', on_delete=CASCADE, related_name='tests')
+    unit = ForeignKey('apps.Units', on_delete=CASCADE, related_name='tests')
 
     def __str__(self):
         return f"Test in English: {self.en} (Unit: {self.unit.name})"

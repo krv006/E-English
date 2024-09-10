@@ -40,6 +40,11 @@ class TestModelSerializer(ModelSerializer):
         model = Test
         fields = '__all__'
 
+    def to_representation(self, instance: Test):
+        repr = super().to_representation(instance)
+        repr['unit'] = UnitsModelSerializer(instance.unit, context=self.context).data
+        return repr
+
 
 class EmailModelSerializer(Serializer):
     email = EmailField(help_text='Enter email')

@@ -9,7 +9,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from root import settings
-from .filter import UnitFilterSet
+from .filters import UnitFilterSet, TestFilterSet
 from .models import User, Books, Units, AdminSiteSettings, Test
 from .serializer import UserModelSerializer, BooksModelSerializer, UnitsModelSerializer, \
     AdminSiteSettingsModelSerializer, TestModelSerializer, VerifyModelSerializer, EmailModelSerializer
@@ -44,6 +44,7 @@ class AdminSiteSettingsListCreateAPIView(ListCreateAPIView):
 class TestViewSet(ModelViewSet):
     queryset = Test.objects.all()
     serializer_class = TestModelSerializer
+    filterset_class = TestFilterSet
 
 
 @extend_schema(tags=['send-email'])
@@ -56,7 +57,7 @@ class SendEmailAPIView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data['email']
-        code = randint(100000, 10000000)
+        code = randint(100000, 1000000)
         cache.set(email, code, timeout=120)
         send_mail(subject="HI", message=f"Hello My Friend Your Verify Code {code}", from_email=settings.EMAIL_HOST_USER,
                   recipient_list=[email])

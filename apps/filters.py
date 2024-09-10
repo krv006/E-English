@@ -20,3 +20,10 @@ class UnitFilterSet(FilterSet):
         model = Units
         fields = 'book',
 
+
+class TestFilterSet(FilterSet):
+    name = CharFilter(field_name='unit__name', lookup_expr='icontains')
+
+    class Meta:
+        model = Test
+        fields = 'unit',
