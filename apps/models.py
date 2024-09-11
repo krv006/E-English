@@ -1,9 +1,9 @@
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator
-from django.db.models import Model, SlugField
 from django.db.models import Model, CharField, CASCADE, \
-    PositiveIntegerField, ForeignKey, DateTimeField, EmailField, ImageField, FileField
+    ForeignKey, DateTimeField, EmailField, ImageField, FileField
+from django.db.models import Model, SlugField
 from django.utils.text import slugify
 
 
@@ -37,7 +37,7 @@ class Books(Model):
 
 class Units(Model):
     name = CharField(max_length=255)
-    book = ForeignKey('apps.Books', on_delete=CASCADE, related_name='units')
+    book = ForeignKey('apps.Books', CASCADE, related_name='units')
     file = FileField(upload_to='units_files/', validators=[
         FileExtensionValidator(allowed_extensions=['pdf', 'docx', 'txt'])
     ])
@@ -52,7 +52,7 @@ class Test(Model):
     audio_file = FileField(upload_to='test_audio/', validators=[
         FileExtensionValidator(allowed_extensions=['mp3', 'wav'])
     ])
-    unit = ForeignKey('apps.Units', on_delete=CASCADE, related_name='tests')
+    unit = ForeignKey('apps.Units', CASCADE, related_name='tests')
 
     def __str__(self):
         return f"Test in English: {self.en} (Unit: {self.unit.name})"
