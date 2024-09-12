@@ -4,21 +4,65 @@ from django.core.cache import cache
 from django.core.mail import send_mail
 from drf_spectacular.utils import extend_schema
 from rest_framework.generics import ListCreateAPIView, GenericAPIView
-from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 
 from root import settings
 from .filters import UnitFilterSet, TestFilterSet
 from .models import User, Books, Units, AdminSiteSettings, Test
 from .serializer import UserModelSerializer, BooksModelSerializer, UnitsModelSerializer, \
-    AdminSiteSettingsModelSerializer, TestModelSerializer, VerifyModelSerializer, EmailModelSerializer
+    AdminSiteSettingsModelSerializer, TestModelSerializer, VerifyModelSerializer, EmailModelSerializer, \
+    SendEmailSerializer, VerificationCodeSerializer
 
 
 @extend_schema(tags=['user'])
 class UserListCreateAPIView(ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserModelSerializer
+
+    # def post(self, request, *args, **kwargs):
+    #     password = request.POST['password']
+    #     email = request.POST['email']
+
+
+# def create(self, request, *args, **kwargs):
+#     password = request.data['password']
+#     request.data['password'] = make_password(password)
+#     return super().create(request, *args, **kwargs)
+
+
+@extend_schema(tags=['send-email2'])
+class SendEmail(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = SendEmailSerializer
+
+    def post(self, request):
+        serializer = SendEmailSerializer(data=request.data)
+        if serializer.is_valid():
+            receiver_email = serializer.validated_data['email']
+            generate_code = randint(1000, 9999)
+            send_mail(
+                "Verification Code",
+                f"code: {generate_code}",
+                settings.EMAIL_HOST_USER,
+                [receiver_email]
+            )
+            cache.set(receiver_email, generate_code, timeout=120)
+            return Response({"message": "Check Email"}, status=200)
+        return Response(serializer.errors, status=400)
+
+
+@extend_schema(tags=['send-email2'])
+class VerificationCode(APIView):
+    serializer_class = VerificationCodeSerializer
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        serializer = VerificationCodeSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response({"message": "OK"})
 
 
 @extend_schema(tags=['book'])
