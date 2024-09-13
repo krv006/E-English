@@ -19,10 +19,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'apps',
+
+    'django_celery_results',
+
     'rest_framework',
     'rest_framework.authtoken',
-
     'drf_spectacular',
+
 ]
 
 MIDDLEWARE = [
@@ -128,12 +131,19 @@ SPECTACULAR_SETTINGS = {
     'COMPONENT_SPLIT_REQUEST': True,  # Todo rasmdi kompdan olish uchun kerak boladi {multipart.form} da
 }
 
+# TODO Celery orqali email ga send verify code
+# celery send email
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'rvkamronbek@gmail.com'
 EMAIL_HOST_PASSWORD = 'wlog zgzp vuao jxvv'
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'default'
 
 CACHES = {
     'default': {

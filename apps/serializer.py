@@ -37,7 +37,15 @@ class UserModelSerializer(ModelSerializer):
 
 class VerificationCodeSerializer(Serializer):
     email = EmailField()
-    input_code = CharField(max_length=6)
+    code = CharField(max_length=6, help_text='Enter confirmation code')
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+        code = attrs.get('code')
+        cache_code = str(cache.get(email))
+        if code != cache_code:
+            raise ValidationError('Code not found or timed out')
+        return attrs
 
 
 class BooksModelSerializer(ModelSerializer):

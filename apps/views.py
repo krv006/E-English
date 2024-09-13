@@ -1,7 +1,6 @@
 from random import randint
 
 from django.core.cache import cache
-from django.core.mail import send_mail
 from drf_spectacular.utils import extend_schema
 from rest_framework.generics import ListCreateAPIView, GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -9,12 +8,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from root import settings
-from .filters import UnitFilterSet, TestFilterSet
-from .models import User, Books, Units, AdminSiteSettings, Test
-from .serializer import UserModelSerializer, BooksModelSerializer, UnitsModelSerializer, \
+from apps.filters import UnitFilterSet, TestFilterSet
+from apps.models import User, Books, Units, AdminSiteSettings, Test
+from apps.serializer import UserModelSerializer, BooksModelSerializer, UnitsModelSerializer, \
     AdminSiteSettingsModelSerializer, TestModelSerializer, VerifyModelSerializer, EmailModelSerializer, \
     SendEmailSerializer, VerificationCodeSerializer
+from apps.tasks import send_verification_email1, send_verification_email_task
 
 
 @extend_schema(tags=['user'])
@@ -22,9 +21,10 @@ class UserListCreateAPIView(ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserModelSerializer
 
-    # def post(self, request, *args, **kwargs):
-    #     password = request.POST['password']
-    #     email = request.POST['email']
+
+# def post(self, request, *args, **kwargs):
+#     password = request.POST['password']
+#     email = request.POST['email']
 
 
 # def create(self, request, *args, **kwargs):
@@ -42,14 +42,7 @@ class SendEmail(APIView):
         serializer = SendEmailSerializer(data=request.data)
         if serializer.is_valid():
             receiver_email = serializer.validated_data['email']
-            generate_code = randint(1000, 9999)
-            send_mail(
-                "Verification Code",
-                f"code: {generate_code}",
-                settings.EMAIL_HOST_USER,
-                [receiver_email]
-            )
-            cache.set(receiver_email, generate_code, timeout=120)
+            send_verification_email1.delay(receiver_email)
             return Response({"message": "Check Email"}, status=200)
         return Response(serializer.errors, status=400)
 
@@ -103,9 +96,7 @@ class SendEmailAPIView(GenericAPIView):
         email = serializer.validated_data['email']
         code = randint(100000, 1000000)
         cache.set(email, code, timeout=120)
-        send_mail(subject="HI", message=f"Hello My Friend Your Verify Code {code}", from_email=settings.EMAIL_HOST_USER,
-                  recipient_list=[email])
-        print(f'Email:{email}, Code:{code}')
+        send_verification_email_task.delay(email, code)
         return Response({"message": "Successfully sent code"})
 
     def get_queryset(self):

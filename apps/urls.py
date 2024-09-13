@@ -13,12 +13,12 @@ router.register(r'tests', TestViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('user', UserListCreateAPIView.as_view(), name='user'),
-    path('user/register', SendEmail.as_view(), name='user_register'),
-    path('user/verification', VerificationCode.as_view(), name='user_check'),
+    path('user/', UserListCreateAPIView.as_view(), name='user-create'),
+    path('user/register/', SendEmail.as_view(), name='user_register'),
+    path('user/verification/', VerificationCode.as_view(), name='user_check'),
 
-    path('admin', AdminSiteSettingsListCreateAPIView.as_view(), name='admin'),
-    path('auth/send-email', SendEmailAPIView.as_view(), name='send_email'),
-    path('auth/verify-code', VerifyEmailAPIView.as_view(), name='verify-email'),
+    path('admin/', AdminSiteSettingsListCreateAPIView.as_view(), name='admin'),
+    path('auth/send-email/', SendEmailAPIView.as_view(), name='send-email'),
+    path('auth/verify-code/', VerifyEmailAPIView.as_view(), name='verify-email'),
 
 ]
