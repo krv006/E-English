@@ -8,12 +8,12 @@ class TestUrl:
         url = reverse_lazy('verify-email')
         assert url == '/api/v1/auth/verify-code/'
 
+    def test_user_url(self, client):
+        url = reverse_lazy('user-create')
+        assert url == '/api/v1/user/'
+
     def test_auth_url1(self, client):
         url = reverse_lazy('user_register')
         assert url == '/api/v1/user/register/'
         url = reverse_lazy('user_check')
-        assert url == '/api/v1/user/verification/'
-
-    def test_user_url(self, client):
-        url = reverse_lazy('user-create')
-        assert url == '/api/v1/user/'
+        assert url == '/api/v1/user/verification//'

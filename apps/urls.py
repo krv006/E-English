@@ -1,15 +1,17 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-
-from apps.views import UserListCreateAPIView, BooksViewSet, UnitsViewSet, AdminSiteSettingsListCreateAPIView, TestViewSet, \
+from apps.views import UserListCreateAPIView, BooksViewSet, UnitsViewSet, AdminSiteSettingsListCreateAPIView, \
+    TestViewSet, \
     SendEmailAPIView, VerifyEmailAPIView, SendEmail, VerificationCode
+
 router = DefaultRouter()
 
-router.register(r'books', BooksViewSet)
-router.register(r'units', UnitsViewSet)
+app_name = 'apps'
 
-router.register(r'tests', TestViewSet)
+router.register(r'books', BooksViewSet, basename='books')
+router.register(r'units', UnitsViewSet, basename='units')
+router.register(r'tests', TestViewSet, basename='tests')
 
 urlpatterns = [
     path('', include(router.urls)),
