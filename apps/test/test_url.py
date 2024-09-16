@@ -1,19 +1,21 @@
+import pytest
+
 from rest_framework.reverse import reverse_lazy
 
 
 class TestUrl:
-    def test_auth_url(self, client):
-        url = reverse_lazy('send-email')
-        assert url == '/api/v1/auth/send-email/'
-        url = reverse_lazy('verify-email')
-        assert url == '/api/v1/auth/verify-code/'
+    @pytest.mark.parametrize("url,name", [
+        ('/api/v1/books/', 'apps:books-list'),
+        ('/api/v1/units/', 'apps:units-list'),
+        ('/api/v1/tests/', 'apps:tests-list'),
 
-    def test_user_url(self, client):
-        url = reverse_lazy('user-create')
-        assert url == '/api/v1/user/'
+        ('/api/v1/user/', 'apps:user-create'),
+        ('/api/v1/user/register/', 'apps:user_register'),
+        ('/api/v1/user/verification/', 'apps:user_check'),
 
-    def test_auth_url1(self, client):
-        url = reverse_lazy('user_register')
-        assert url == '/api/v1/user/register/'
-        url = reverse_lazy('user_check')
-        assert url == '/api/v1/user/verification//'
+        ('/api/v1/admin/', 'apps:admin'),
+        ('/api/v1/auth/send-email/', 'apps:send-email'),
+        ('/api/v1/auth/verify-code/', 'apps:verify-email'),
+    ])
+    def test_url_name(self, url, name):
+        assert url == reverse_lazy(name)
