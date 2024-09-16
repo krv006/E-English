@@ -51,7 +51,7 @@ class VerificationCodeSerializer(Serializer):
 class BooksModelSerializer(ModelSerializer):
     class Meta:
         model = Books
-        fields = '__all__'
+        exclude = ("slug" , "created_at")
 
 
 class UnitsModelSerializer(ModelSerializer):

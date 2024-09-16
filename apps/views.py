@@ -58,10 +58,14 @@ class VerificationCode(APIView):
         return Response({"message": "OK"})
 
 
+
 @extend_schema(tags=['book'])
 class BooksViewSet(ModelViewSet):
     queryset = Books.objects.all()
     serializer_class = BooksModelSerializer
+    permission_classes = [AllowAny, ]
+
+
 
 
 @extend_schema(tags=['units'])

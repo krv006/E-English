@@ -11,7 +11,7 @@ router = DefaultRouter()
 
 app_name = 'apps'
 
-router.register(r'books', BooksViewSet, basename='books')
+router.register(r'books', BooksViewSet, basename='books' )
 router.register(r'units', UnitsViewSet, basename='units')
 router.register(r'tests', TestViewSet, basename='tests')
 

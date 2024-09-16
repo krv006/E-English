@@ -19,3 +19,5 @@ class TestUrl:
     ])
     def test_url_name(self, url, name):
         assert url == reverse_lazy(name)
+
+

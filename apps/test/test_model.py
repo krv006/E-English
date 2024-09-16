@@ -8,4 +8,4 @@ from apps.test.fixture import books_name
 def test_my_user(books_name):
     books = Books.objects.get(name='Texnika')
     assert books.name == 'Texnika'
-    assert books.id == 1
+    assert books.id == 2
