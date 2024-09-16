@@ -1,19 +1,11 @@
 import pytest
 
 from apps.models import Books
-
-
-@pytest.fixture()
-def categories():
-    Books.objects.create(name='Texnika')
-    Books.objects.create(name='Choqinirgan ota')
-    Books.objects.create(name='Shaxmat Doskasi')
-    Books.objects.create(name='Janna Dark')
-    Books.objects.create(name='Million dollorlik xatolar')
+from apps.test.fixture import books_name
 
 
 @pytest.mark.django_db
-def test_my_user(categories):
+def test_my_user(books_name):
     books = Books.objects.get(name='Texnika')
     assert books.name == 'Texnika'
     assert books.id == 1
