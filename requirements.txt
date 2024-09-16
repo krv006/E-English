@@ -26,9 +26,11 @@ packaging==24.1
 pillow==10.4.0
 pluggy==1.5.0
 prompt_toolkit==3.0.47
+psycopg2-binary==2.9.9
 pytest==8.3.3
 pytest-django==4.9.0
 python-dateutil==2.9.0.post0
+python-dotenv==1.0.1
 PyYAML==6.0.2
 redis==5.0.8
 referencing==0.35.1

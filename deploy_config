@@ -3,7 +3,7 @@
 
 server {
     listen       8001;
-    server_name  51.20.115.45;
+    server_name  16.16.185.143;
 
     location = /favicon.ico { access_log off; log_not_found off; }
 
@@ -51,11 +51,10 @@ WantedBy=multi-user.target
 [Unit]
 Description=celery service
 After=network.target
-
+16.16.185.14316.16.185.143
 [Service]
 PIDFile=/run/celery/pid
-User=celery
-Group=celery
+User=ubuntu
 RuntimeDirectory=/var/www/projects/E-english
 WorkingDirectory=/var/www/projects/E-english
 ExecStart=celery -A proj -l info
@@ -77,24 +76,21 @@ WantedBy=multi-user.target
 /var/www/projects/E-english
 
 
-systemctl start e_english.service
-systemctl start e_english.service
-systemctl enable e_english.service
+sudo systemctl stop e_english.service
+sudo systemctl enable e_english.service
+sudo systemctl start e_english.service
+sudo systemctl status e_english.service
+sudo systemctl restart e_english.service
 
 
-systemctl start service
-systemctl enable service
-systemctl stop service
-systemctl restart service
-
-systemctl stop e_english.service
-systemctl enable e_english.service
-systemctl start e_english.service
-systemctl status e_english.service
-systemctl restart e_english.service
+sudo systemctl stop celery.service
+sudo systemctl enable celery.service
+sudo systemctl start celery.service
+sudo systemctl status celery.service
+sudo systemctl restart celery.service
 
 
-systemctl restart nginx.service
+sudo systemctl restart nginx.service
 
 
 
@@ -111,6 +107,6 @@ python3 manage.py runserver 0:8000
 
 
 /etc/nginx/sites-available/falcon
-ln -s /etc/nginx/sites-available/shop_drf /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/e_english /etc/nginx/sites-enabled/
 
 /etc/nginx/sites-enabled/
