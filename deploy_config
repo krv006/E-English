@@ -1,23 +1,23 @@
-/etc/nginx/sites-available/e_english
+sudo nano /etc/nginx/sites-available/e_english
 /etc/nginx/sites-enable/e_english
 
 server {
-    listen       8001;
-    server_name  16.16.185.143;
+    listen       8024;
+    server_name  16.16.24.121;
 
     location = /favicon.ico { access_log off; log_not_found off; }
 
     location /static/ {
-        root /var/www/projects/E-english;
+        root /var/www/project/e-english;
     }
 
     location /media/ {
-        root /var/www/projects/E-english;
+        root /var/www/project/e-english;
     }
 
     location / {
         include proxy_params;
-        proxy_pass http://unix:/var/www/projects/E-english/falcon.sock;
+        proxy_pass http://unix:/var/www/project/e-english/falcon.sock;
     }
 }
 
@@ -37,43 +37,15 @@ After=network.target
 [Service]
 User=root
 Group=www-data
-WorkingDirectory=/var/www/projects/E-english
-ExecStart=/var/www/projects/E-english/.venv/bin/gunicorn --workers 1 --bind unix:/var/www/projects/E-english/falcon.sock root.wsgi:application
-
-[Install]
-WantedBy=multi-user.target
-
-
-================== celery service ==================
-/etc/systemd/system/celery.service
-
-
-[Unit]
-Description=celery service
-After=network.target
-16.16.185.14316.16.185.143
-[Service]
-PIDFile=/run/celery/pid
-User=ubuntu
-RuntimeDirectory=/var/www/projects/E-english
-WorkingDirectory=/var/www/projects/E-english
-ExecStart=celery -A proj -l info
-ExecReload=/bin/kill -s HUP $MAINPID
-ExecStop=/bin/kill -s TERM $MAINPID
-Restart=on-abort
-PrivateTmp=true
+WorkingDirectory=/var/www/project/e-english
+ExecStart=/var/www/project/e-english/.venv/bin/gunicorn --workers 1 --bind unix:/var/www/project/e-english/falcon.sock root.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
 
 
 
-==============================================
-
-
-
-
-/var/www/projects/E-english
+/var/www/projects/e-english
 
 
 sudo systemctl stop e_english.service
@@ -83,17 +55,17 @@ sudo systemctl status e_english.service
 sudo systemctl restart e_english.service
 
 
-sudo systemctl stop celery.service
-sudo systemctl enable celery.service
-sudo systemctl start celery.service
-sudo systemctl status celery.service
-sudo systemctl restart celery.service
+sudo systemctl stop e_english_celery.service
+sudo systemctl enable e_english_celery.service
+sudo systemctl start e_english_celery.service
+sudo systemctl status e_english_celery.service
+sudo systemctl restart e_english_celery.service
 
 
 sudo systemctl restart nginx.service
 
 
-
+systemctl restart nginx.service
 
 1. comp -> github, gitlab, bitbucket -> server
 
@@ -110,3 +82,60 @@ python3 manage.py runserver 0:8000
 ln -s /etc/nginx/sites-available/e_english /etc/nginx/sites-enabled/
 
 /etc/nginx/sites-enabled/
+
+
+
+/etc/systemd/system/e_english_celery.service
+
+
+======================= Celery Beat Service =======================
+[Unit]
+Description=Celery Beat Service
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/var/www/project/e-english
+Environment="PATH=/var/www/project/e-english/.venv/bin"
+ExecStart=/var/www/project/e-english/.venv/bin/celery -A root beat --loglevel=info
+
+[Install]
+WantedBy=multi-user.target
+
+
+======================= Celery Service =======================
+
+
+[Unit]
+Description=Celery Service
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/var/www/project/e-english
+Environment="PATH=/var/www/project/e-english/.venv/bin"
+ExecStart=/var/www/project/e-english/.venv/bin/celery -A root worker --loglevel=info
+
+[Install]
+WantedBy=multi-user.target
+
+
+CELERY SERVICE
+
+sudo nano /etc/systemd/system/e_english_celery.service
+
+
+
+WorkingDirectory=/var/www/project/e-english
+ExecStart=/var/www/project/e-english/.venv/bin/gunicorn --workers 1 --bind unix:/var/www/project/e-english/falcon.sock root.wsgi:application
+
+
+
+docker run --name redis_container -p 6379:6379 -d redis:alpine -> ce90e4eedb95b378cecd2dfad7232ce17e56d4a3656ca956bfb698aa67a52b9e
+
+docker run --name postgres_container -e POSTGRES_PASSWORD=1 -p 5432:5432 -d postgres:alpine -> a033671a6d869bac4a9235d57cf7bfa8cdffa6d0740f585269dac4651b5de299
+
+
+docker run --name postgres_container -e POSTGRES_PASSWORD=1 -p 5432:5432 -d postgres:alpine -> database xam qoshib yaratib yuboradi
