@@ -153,7 +153,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'rvkamronbek@gmail.com'
-EMAIL_HOST_PASSWORD = 'wlog zgzp vuao jxvv'
+EMAIL_HOST_PASSWORD = 'lsjw bobj kams uzam'
 
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'django-db'
