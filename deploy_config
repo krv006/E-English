@@ -1,23 +1,24 @@
-sudo nano /etc/nginx/sites-available/e_english
+sudo nano /etc/nginx/sites-available/english
+
 /etc/nginx/sites-enable/e_english
 
 server {
     listen       8024;
-    server_name  16.16.24.121;
+    server_name  128.199.168.206;
 
     location = /favicon.ico { access_log off; log_not_found off; }
 
     location /static/ {
-        root /var/www/project/e-english;
+        root /var/www/english;
     }
 
     location /media/ {
-        root /var/www/project/e-english;
+        root /var/www/english;
     }
 
     location / {
         include proxy_params;
-        proxy_pass http://unix:/var/www/project/e-english/falcon.sock;
+        proxy_pass http://unix:/var/www/english/falcon.sock;
     }
 }
 
@@ -37,8 +38,8 @@ After=network.target
 [Service]
 User=root
 Group=www-data
-WorkingDirectory=/var/www/project/e-english
-ExecStart=/var/www/project/e-english/.venv/bin/gunicorn --workers 1 --bind unix:/var/www/project/e-english/falcon.sock root.wsgi:application
+WorkingDirectory=/var/www/english
+ExecStart=/var/www/english/.venv/bin/gunicorn --workers 1 --bind unix:/var/www/english/falcon.sock root.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
@@ -55,11 +56,11 @@ sudo systemctl status e_english.service
 sudo systemctl restart e_english.service
 
 
-sudo systemctl stop e_english_celery.service
-sudo systemctl enable e_english_celery.service
-sudo systemctl start e_english_celery.service
-sudo systemctl status e_english_celery.service
-sudo systemctl restart e_english_celery.service
+sudo systemctl stop english_celery.service
+sudo systemctl enable english_celery.service
+sudo systemctl start english_celery.service
+sudo systemctl status english_celery.service
+sudo systemctl restart english_celery.service
 
 
 sudo systemctl restart nginx.service
@@ -79,13 +80,13 @@ python3 manage.py runserver 0:8000
 
 
 /etc/nginx/sites-available/falcon
-ln -s /etc/nginx/sites-available/e_english /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/english /etc/nginx/sites-enabled/
 
 /etc/nginx/sites-enabled/
 
 
 
-/etc/systemd/system/e_english_celery.service
+/etc/systemd/system/english_celery.service
 
 
 ======================= Celery Beat Service =======================
@@ -96,9 +97,9 @@ After=network.target
 [Service]
 User=root
 Group=www-data
-WorkingDirectory=/var/www/project/e-english
-Environment="PATH=/var/www/project/e-english/.venv/bin"
-ExecStart=/var/www/project/e-english/.venv/bin/celery -A root beat --loglevel=info
+WorkingDirectory=/var/www/english
+Environment="PATH=/var/www/english/.venv/bin"
+ExecStart=/var/www/english/.venv/bin/celery -A root beat --loglevel=info
 
 [Install]
 WantedBy=multi-user.target
@@ -114,9 +115,9 @@ After=network.target
 [Service]
 User=root
 Group=www-data
-WorkingDirectory=/var/www/project/e-english
-Environment="PATH=/var/www/project/e-english/.venv/bin"
-ExecStart=/var/www/project/e-english/.venv/bin/celery -A root worker --loglevel=info
+WorkingDirectory=/var/www/english
+Environment="PATH=/var/www/english/.venv/bin"
+ExecStart=/var/www/english/.venv/bin/celery -A root worker --loglevel=info
 
 [Install]
 WantedBy=multi-user.target
@@ -128,8 +129,8 @@ sudo nano /etc/systemd/system/e_english_celery.service
 
 
 
-WorkingDirectory=/var/www/project/e-english
-ExecStart=/var/www/project/e-english/.venv/bin/gunicorn --workers 1 --bind unix:/var/www/project/e-english/falcon.sock root.wsgi:application
+WorkingDirectory=/var/www/english
+ExecStart=/var/www/english/.venv/bin/gunicorn --workers 1 --bind unix:/var/www/english/falcon.sock root.wsgi:application
 
 
 
@@ -139,3 +140,7 @@ docker run --name postgres_container -e POSTGRES_PASSWORD=1 -p 5432:5432 -d post
 
 
 docker run --name postgres_container -e POSTGRES_PASSWORD=1 -p 5432:5432 -d postgres:alpine -> database xam qoshib yaratib yuboradi
+
+
+name xato bob qolgan shulardi togirlashim kerak
+
