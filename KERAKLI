@@ -1,0 +1,142 @@
+/etc/nginx/sites-enabled/(nginx_file_nomi)
+
+server {
+    listen       80;
+    server_name  xolmomin.falcon-uz.uz;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+
+    location /static/ {
+        root /var/www/english;
+    }
+
+    location /media/ {
+        root /var/www/english;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/var/www/english/falcon.sock;
+    }
+}
+
+
+
+
+
+
+
+/etc/systemd/system/english.service
+
+
+[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/var/www/english
+ExecStart=/var/www/english/.venv/bin/gunicorn --workers 3 --bind unix:/var/www/english/falcon.sock root.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+systemctl start english.service
+systemctl enable english.service
+systemctl status english.service
+
+
+systemctl start service
+systemctl enable service
+systemctl stop service
+systemctl restart service
+systemctl disable service
+
+
+
+
+1. comp -> github, gitlab, bitbucket -> server
+
+2. comp -> server
+
+3. ci/cd
+
+
+scp file root@IP:/var/www
+scp -P 22007 file root@IP:/var/www
+python3 manage.py runserver 0:8004
+
+ufw status
+ufw allow 8004
+
+
+
+/etc/nginx/sites-available/falcon
+ln -s /etc/nginx/sites-available/falcon /etc/nginx/sites-enabled/
+
+/etc/nginx/sites-enabled/
+
+
+
+postgres
+
+ssl, github, oauth2, firewall
+
+
+
+
+1. backend, kutubxonalar, run
+2. service file, check
+3. nginx file
+4. domain check, + ssl
+
+nginx -t
+
+
+certbot --nginx -d xolmomin.falcon-uz.uz
+
+
+
+https://www.youtube.com/watch?v=gyO9qagO07k&list=PLk18gAgM3ns43Z2e3QSot2ki3lUfFb5Ii
+
+
+
+======================= Celery Beat Service =======================
+[Unit]
+Description=Celery Beat Service
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/var/www/english
+Environment="PATH=/var/www/english/.venv/bin"
+ExecStart=/var/www/english/.venv/bin/celery -A root beat --loglevel=info
+
+[Install]
+WantedBy=multi-user.target
+
+
+======================= Celery Service =======================
+
+
+[Unit]
+Description=Celery Service
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/var/www/english
+Environment="PATH=/var/www/english/.venv/bin"
+ExecStart=/var/www/english/.venv/bin/celery -A root worker --loglevel=info
+
+
+
+
+mv E-English/ e-english -> name di ozgartrgani kerak bolaid
+[Install]
+WantedBy=multi-user.target
