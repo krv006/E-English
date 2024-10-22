@@ -15,11 +15,11 @@ class UserModelSerializer(ModelSerializer):
 
         # Tavsiya qilinmaydi, lekin agar vaqtincha kerak bo'lsa:
         # todo bunda write_only bolganda yoziladi lekin post va get qilganda korinmaydi swaggerda
-        # extra_kwargs = {
-        #     "password": {
-        #         "write_only": True,
-        #     }
-        # }
+        extra_kwargs = {
+            "password": {
+                "write_only": True,
+            }
+        }
 
         # todo bunda read_only bolgani uchun faqat korsa boladi va ozgartirish kiritib bolmaydi
         # extra_kwargs = {
