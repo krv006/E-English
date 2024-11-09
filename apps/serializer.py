@@ -101,3 +101,7 @@ class VerifyModelSerializer(Serializer):
         if code != cache_code:
             raise ValidationError('Code not found or timed out')
         return attrs
+
+
+
+# todo register
