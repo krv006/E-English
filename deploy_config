@@ -1,10 +1,10 @@
 sudo nano /etc/nginx/sites-available/english
 
-/etc/nginx/sites-enable/e_english
+/etc/nginx/sites-enable/english
 
 server {
-    listen       8024;
-    server_name  128.199.168.206;
+    listen       8017;
+    server_name  157.245.192.13;
 
     location = /favicon.ico { access_log off; log_not_found off; }
 
@@ -18,7 +18,7 @@ server {
 
     location / {
         include proxy_params;
-        proxy_pass http://unix:/var/www/english/falcon.sock;
+        proxy_pass http://unix:/var/www/english/english.sock;
     }
 }
 
@@ -28,7 +28,7 @@ server {
 
 
 
-/etc/systemd/system/e_english.service
+/etc/systemd/system/english.service
 
 
 [Unit]
@@ -39,7 +39,7 @@ After=network.target
 User=root
 Group=www-data
 WorkingDirectory=/var/www/english
-ExecStart=/var/www/english/.venv/bin/gunicorn --workers 1 --bind unix:/var/www/english/falcon.sock root.wsgi:application
+ExecStart=/var/www/english/.venv/bin/gunicorn --workers 1 --bind unix:/var/www/english/english.sock root.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
@@ -49,11 +49,11 @@ WantedBy=multi-user.target
 /var/www/projects/e-english
 
 
-sudo systemctl stop e_english.service
-sudo systemctl enable e_english.service
-sudo systemctl start e_english.service
-sudo systemctl status e_english.service
-sudo systemctl restart e_english.service
+sudo systemctl stop english.service
+sudo systemctl enable english.service
+sudo systemctl start english.service
+sudo systemctl status english.service
+sudo systemctl restart english.service
 
 
 sudo systemctl stop english_celery.service
