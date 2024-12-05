@@ -3,8 +3,8 @@ sudo nano /etc/nginx/sites-available/english
 /etc/nginx/sites-enable/english
 
 server {
-    listen       8017;
-    server_name  157.245.192.13;
+    listen       8012;
+    server_name  206.189.36.11;
 
     location = /favicon.ico { access_log off; log_not_found off; }
 
@@ -80,7 +80,7 @@ python3 manage.py runserver 0:8000
 
 
 /etc/nginx/sites-available/falcon
-ln -s /etc/nginx/sites-available/english /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/english    /etc/nginx/sites-enabled/
 
 /etc/nginx/sites-enabled/
 
